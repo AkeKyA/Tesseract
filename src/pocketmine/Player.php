@@ -921,10 +921,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$this->getDisplayName()
 		])));
 
-        if(strlen(trim($ev->getJoinMessage())) > 0){
-            $this->server->broadcastMessage($ev->getJoinMessage());
-        }
-
 		$this->sendSettings();
 
 		$this->server->onPlayerLogin($this);
@@ -3573,10 +3569,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 				if($this->loggedIn === true and $ev->getAutoSave()){
 					$this->save();
 				}
-				
-				if($this->spawned !== false and $ev->getQuitMessage() != ""){
-					$this->server->broadcastMessage($ev->getQuitMessage());
-				}
 			}
 			
 			parent::close();
@@ -3809,10 +3801,6 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 			$exp = min(91, $this->getTotalXp()); //Max 7 levels of exp dropped
 			$this->getLevel()->spawnXPOrb($this->add(0, 0.2, 0), $exp);
 			$this->setTotalXp(0, true);
-		}
-
-		if($ev->getDeathMessage() != ""){
-			$this->server->broadcast($ev->getDeathMessage(), Server::BROADCAST_CHANNEL_USERS);
 		}
 
 		$pos = $this->getSpawn();
