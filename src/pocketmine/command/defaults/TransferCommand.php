@@ -25,7 +25,7 @@ namespace pocketmine\command\defaults;
 
 use pocketmine\network\protocol\TransferPacket;
 use pocketmine\command\CommandSender;
-use pocketmine\{Player, Server};
+use pocketmine\Player;
 
 class TransferCommand extends VanillaCommand{
 	
@@ -40,48 +40,18 @@ class TransferCommand extends VanillaCommand{
 	}
 
 	public function execute(CommandSender $sender, $currentAlias, array $args){
-		$address = null;
-		$port = null;
-		$player = null;
 		if($sender instanceof Player){
 			if(!$this->testPermission($sender)){
 				return true;
 			}
 
 			if(count($args) <= 0){
-				$sender->sendMessage("Usage: /transferserver <address> [port]");
+				$sender->sendMessage("Usage: /transfer <address> [port]");
 				return false;
 			}
 
-			$address = strtolower($args[0]);
-			$port = (isset($args[1]) && is_numeric($args[1]) ? $args[1] : 19132);
-
-			$pk = new TransferPacket();
-			$pk->address = $address;
-			$pk->port = $port;
-			$sender->dataPacket($pk);
-
+			$sender->transfer($args[0], (int) ($args[1] ?? 19132));
 			return false;
 		}
-
-		if(count($args) <= 1){
-			$sender->sendMessage("Usage: /transferserver <player> <address> [port]");
-			return false;
-		}
-
-		if(!($player = Server::getInstance()->getPlayer($args[0])) instanceof Player){
-			$sender->sendMessage("Player specified not found!");
-			return false;
-		}
-
-		$address = strtolower($args[1]);
-		$port = (isset($args[2]) && is_numeric($args[2]) ? $args[2] : 19132);
-
-		$sender->sendMessage("Sending ".$player->getName()." to ".$address.":".$port);
-
-		$pk = new TransferPacket();
-		$pk->address = $address;
-		$pk->port = $port;
-		$player->dataPacket($pk);
 	}
 }

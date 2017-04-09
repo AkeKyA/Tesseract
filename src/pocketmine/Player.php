@@ -71,6 +71,7 @@ use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\event\player\PlayerToggleFlightEvent;
 use pocketmine\event\player\PlayerToggleSneakEvent;
 use pocketmine\event\player\PlayerToggleSprintEvent;
+use pocketmine\event\player\PlayerTransferEvent;
 use pocketmine\event\player\PlayerUseFishingRodEvent;
 use pocketmine\event\server\DataPacketReceiveEvent;
 use pocketmine\event\server\DataPacketSendEvent;
@@ -144,6 +145,7 @@ use pocketmine\network\protocol\StartGamePacket;
 use pocketmine\network\protocol\SetPlayerGameTypePacket;
 use pocketmine\network\protocol\TakeItemEntityPacket;
 use pocketmine\network\protocol\TextPacket;
+use pocketmine\network\protocol\TransferPacket;
 use pocketmine\network\protocol\UpdateAttributesPacket;
 use pocketmine\network\protocol\UpdateBlockPacket;
 use pocketmine\network\SourceInterface;
@@ -3312,6 +3314,22 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		}
 
 		$timings->stopTiming();
+	}
+
+	public function transfer(string $address, int $port = 19132, string $message = "transfer") : bool{
+		$this->server->getPluginManager()->callEvent($ev = new PlayerTransferEvent($this, $address, $port, $message));
+
+		if(!$ev->isCancelled()){
+			$pk = new TransferPacket();
+			$pk->address = $ev->getAddress();
+			$pk->port = $ev->getPort();
+			$this->directDataPacket($pk);
+			$this->close("", $ev->getMessage(), false);
+
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
