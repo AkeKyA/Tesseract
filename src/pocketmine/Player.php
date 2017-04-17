@@ -3475,57 +3475,70 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
 		}
 		return false;
 	}
-	
+
 	/**
-     * Send a title text with/without a sub title text to a player
-	 * -1 defines the default value used by the client
-     *
-     * @param $title
-     * @param string $subtitle
-     * @return bool
-     */
-	public function sendTitle(string $title, string $subtitle = "", int $fadein = -1, int $fadeout = -1, int $duration = -1){
-          $this->prepareTitle($title, $subtitle, $fadein, $fadeout, $duration); //correct the bug but not optimized
-          $this->prepareTitle($title, $subtitle, $fadein, $fadeout, $duration);
-	}
-	
-	/**
-	 * This code must be changed in the future but currently, send 2 packets fixes the subtitle bug... 
-    */
- 	private function prepareTitle(string $title, string $subtitle = "", int $fadein = -1, int $fadeout = -1, int $duration = -1){
-		$pk = new SetTitlePacket();
-		$pk->type = SetTitlePacket::TYPE_TITLE;
-		$pk->title = $title;
-		$pk->fadeInDuration = $fadein;
-		$pk->fadeOutDuration = $fadeout;
-		$pk->duration = $duration;
-		$this->dataPacket($pk);
-		
+	 * Adds a title text to the user's screen, with an optional subtitle.
+	 *
+	 * @param string $title
+	 * @param string $subtitle
+	 * @param int    $fadeIn Duration in ticks for fade-in. If -1 is given, client-sided defaults will be used.
+	 * @param int    $stay Duration in ticks to stay on screen for
+	 * @param int    $fadeOut Duration in ticks for fade-out.
+	 */
+	public function addTitle(string $title, string $subtitle = "", int $fadeIn = -1, int $stay = -1, int $fadeOut = -1){
+		$this->setTitleDuration($fadeIn, $stay, $fadeOut);
 		if($subtitle !== ""){
+			$this->sendTitleText($subtitle, SetTitlePacket::TYPE_SUB_TITLE);
+		}
+		$this->sendTitleText($title, SetTitlePacket::TYPE_TITLE);
+	}
+
+	/**
+	 * Adds small text to the user's screen.
+	 *
+	 * @param string $message
+	 */
+	public function addActionBarMessage(string $message){
+		$this->sendTitleText($message, SetTitlePacket::TYPE_ACTION_BAR);
+	}
+
+	/**
+	 * Removes the title from the client's screen.
+	 */
+	public function removeTitles(){
+		$pk = new SetTitlePacket();
+		$pk->type = SetTitlePacket::TYPE_CLEAR;
+		$this->dataPacket($pk);
+	}
+
+	/**
+	 * Sets the title duration.
+	 *
+	 * @param int $fadeIn Title fade-in time in ticks.
+	 * @param int $stay Title stay time in ticks.
+	 * @param int $fadeOut Title fade-out time in ticks.
+	 */
+	public function setTitleDuration(int $fadeIn, int $stay, int $fadeOut){
+		if($fadeIn >= 0 and $stay >= 0 and $fadeOut >= 0){
 			$pk = new SetTitlePacket();
-			$pk->type = SetTitlePacket::TYPE_SUB_TITLE;
-			$pk->title = $subtitle;
-			$pk->fadeInDuration = $fadein;
-			$pk->fadeOutDuration = $fadeout;
-			$pk->duration = $duration;
+			$pk->type = SetTitlePacket::TYPE_TIMES;
+			$pk->fadeInDuration = $fadeIn;
+			$pk->duration = $stay;
+			$pk->fadeOutDuration = $fadeOut;
 			$this->dataPacket($pk);
 		}
 	}
 
 	/**
-	 * Send an action bar text to a player
-	 * -1 defines the default value used by the client
+	 * Internal function used for sending titles.
 	 *
-	 * @param $title
-	 * @return bool
+	 * @param string $title
+	 * @param int $type
 	 */
-	public function sendActionBar(string $title, int $fadein = -1, int $fadeout = -1, int $duration = -1){
+	protected function sendTitleText(string $title, int $type){
 		$pk = new SetTitlePacket();
-		$pk->type = SetTitlePacket::TYPE_ACTION_BAR;
+		$pk->type = $type;
 		$pk->title = $title;
-		$pk->fadeInDuration = $fadein;
-		$pk->fadeOutDuration = $fadeout;
-		$pk->duration = $duration;
 		$this->dataPacket($pk);
 	}
 

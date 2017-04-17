@@ -7,11 +7,11 @@ Tesseract supports packet and event debug system (for plugin developers) <br>
 Contact us on [Gitter](https://gitter.im/TesseractTeam/Lobby?utm_source=ios&utm_medium=link&utm_campaign=ios-share-link) for support**
 
 ## Information Title
-**TEXTURES PACKS 1.0.4 DO NOT DISPLAY THE TITLES! PLEASE REMOVE YOUR TEXTURES PACK 1.0.4 TO HAVE THE TITLES ON YOUR SERVERS! :)** <br>
+**TEXTURES PACKS CURRENTLY ARE IN BETA, PLEASE REPORT ANY BUGS!** <br>
 
 ## Notice
 
-**Tesseract is supported to Minecraft:PE 1.0.5 & [1.1.0 beta](https://github.com/TesseractTeam/Tesseract/tree/MCPE-1.1-Beta)  (PE & Win10) <br>
+**Tesseract is supported to Minecraft:PE 1.0.6 & [1.1.0 beta](https://github.com/TesseractTeam/Tesseract/tree/MCPE-1.1-Beta)  (PE & Win10) <br>
 Report any issues and we will try to fix them for you.**  <br>
 
 ## Builds
@@ -20,7 +20,6 @@ __Travis-CI Build:__<br>
  __CircleCI Build__<br>
 [![CircleCI](https://circleci.com/gh/circleci/mongofinil.svg?&style=shield&circle-token=8678c9589c2e09b659783b4d7a65365fa982127e/)](https://circleci.com/gh/TesseractTeam/Tesseract)
 
-You can get the latest .phar from [here](https://circleci-tkn.rhcloud.com/api/v1/project/TesseractTeam/Tesseract/tree/master/latest/artifacts/Tesseract_1.2.0.phar)
 ## Quick Links (Instead of scrolling, click these!)
 
 __[Installation](#installation)__ <br>
