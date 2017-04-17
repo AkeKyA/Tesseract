@@ -15,7 +15,7 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @author Tessetact Team
+ * @author Tesseract Team
  * @link http://www.github.com/TesseractTeam/Tesseract
  * 
  *
@@ -51,7 +51,7 @@ class TransferCommand extends VanillaCommand{
 			}
 
 			$sender->transfer($args[0], (int) ($args[1] ?? 19132));
-			return false;
+			return true;
 		}
 	}
 }

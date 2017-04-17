@@ -3489,6 +3489,19 @@ class Player extends Human implements CommandSender, InventoryHolder, ChunkLoade
           $this->prepareTitle($title, $subtitle, $fadein, $fadeout, $duration);
 	}
 	
+	public function transfer($address, int $port){
+		$ev = new PlayerTransferEvent($this, $address, $port);
+		$this->server->getPluginManager()->callEvent($ev);
+		if(!$ev->isCancelled()){
+			$pk = new TransferPacket();
+			$pk->address = $address;
+			$pk->port = $port;
+			$this->dataPacket($pk);
+			return true;
+		}
+		return false;
+	}
+	
 	/**
 	 * This code must be changed in the future but currently, send 2 packets fixes the subtitle bug... 
     */
